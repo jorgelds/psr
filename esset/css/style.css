@@ -1,0 +1,7 @@
+.dropdown-menu{
+    background: #fff !important;
+}
+
+input[type="file"]#archivo_modal {
+    width: 100%;
+}
