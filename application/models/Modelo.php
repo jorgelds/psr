@@ -48,8 +48,8 @@ class Modelo extends CI_Model {
         }
         else{
             $enviar = array(
-                'document' => $datos['tip_ident'],
-                'documentType' => $datos['document'],
+                'documentType' => $datos['tip_ident'],
+                'document' => $datos['document'],
                 'nombre' => $datos['nombre'],
                 'apellido' => $datos['apellido'],
                 'company' => $datos['company'],
@@ -63,7 +63,7 @@ class Modelo extends CI_Model {
                 'phone' => $datos['tel'],
                 'mobile' => $datos['tel']
             );
-            //$this->db->insert('persona', $datos);
+            $this->db->insert('persona', $enviar);
             if($this->db->insert_id() > 0){
                 return true;
             }else{
