@@ -34,11 +34,7 @@
     });
     $('#divMiCalendario2').data("DateTimePicker");
     $( document ).ready(function() {
-        if (<?php echo $mensaje; ?> == 0 || <?php echo $mensaje; ?> == -1 || <?php echo $mensaje; ?> == 2 || <?php echo $mensaje; ?> == 1) {
-            $('#alertsito').fadeOut(10000, function(){
-                $(this).remove();
-            });
-        }
+
     });
 
     (function(a){a.fn.validCampo=function(b){
@@ -51,14 +47,23 @@
     )(jQuery);
     $(document).on('ready',function(){
         //Para escribir solo letras
-        $('#cedula').validCampo(' 0123456789');
+        $('#telefono').validCampo(' 0123456789');
         $('#saldo').validCampo(' 0123456789.');
 
         $('#texto').validCampo(' abcdefghijklmnñopqrstuvwxyzáéiou');
         $('#divMiCalendario').validCampo(' 0123456789-');
-        $('#ic').hide();
-        $('#ic2').hide();
+        $('#formulario').hide();
 
+    });
+
+    $(".btn-pse").click(function () {
+        $('#formulario').show();
+        $("#email").hide();
+    });
+
+    $("#ya").click(function () {
+        $('#formulario').hide();
+        $("#email").show();
     });
 
     function contr(x) {
@@ -185,6 +190,29 @@
             $("#ic6").show();
         }
     }
+
+    $("#secon_correo").blur(function () {
+        if($("#correo").val() != "" && $("#secon_correo").val() != ""){
+            if ($("#secon_correo").val() == $("#correo").val()) {
+            }
+            else {
+                $("#secon_correo").val("");
+                alert("Disculpe pero los dos correos deben ser iguales");
+            }
+        }
+    });
+
+    $("#correo").blur(function () {
+        if($("#secon_correo").val() != ""){
+            if($("#secon_correo").val() == $("#correo").val()){
+                console.log("Son iguales");
+            }
+            else{
+                $("#secon_correo").val("");
+                alert("Disculpe pero los dos correos deben ser iguales");
+            }
+        }
+    });
 </script>
 </body>
 </html>

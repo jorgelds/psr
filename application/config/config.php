@@ -17,7 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | environments.
 |
 */
-$config['base_url'] = 'http://localhost/recibos_vzgroup/';
+$config['base_url'] = 'http://localhost/psr/';
 //x $config['base_url'] = 'http://cambios.vzgroup.com.ve/recibos_vzgroup/';
 
 /*

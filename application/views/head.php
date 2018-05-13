@@ -18,7 +18,5 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
     <link rel="stylesheet" href="<?php echo base_url();?>esset/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="<?php echo base_url();?>esset/css/style.css" type="text/css">
-    <?php if($this->session->userdata("online")==TRUE){  ?>
-        <link rel="stylesheet" href="<?php echo base_url();?>esset/css/css_admin/sb-admin.min.css" type="text/css">
-    <?php } ?>
+    <link rel="stylesheet" href="<?php echo base_url();?>esset/font-awesome/css/font-awesome.min.css" type="text/css">
 </head>

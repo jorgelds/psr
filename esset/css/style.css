@@ -1,7 +1,30 @@
+html, body{
+    width:100%;
+}
+
 .dropdown-menu{
     background: #fff !important;
 }
 
 input[type="file"]#archivo_modal {
     width: 100%;
+}
+
+.panel-title{
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #337ab7;
+    padding: 15px;
+}
+
+#cuerpo{
+    border-bottom: solid 3px #c7ddef ;
+    border-left: solid 3px #c7ddef ;
+    border-right: solid 3px #c7ddef ;
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+
+button.btn.btn-pse {
+    background: transparent;
 }
