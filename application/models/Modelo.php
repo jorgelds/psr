@@ -37,11 +37,11 @@ class Modelo extends CI_Model {
 
   function usuarios($datos){
         if($datos['tipo_operacion'] == 0){
-            $this->db->select('id_persona');
-            $this->db->where('correo',$datos['correo']);
+            $this->db->select('documentType, document');
+            $this->db->where('emailAddress',$datos['correo']);
             $result = $this->db->get('persona');
-            if($result->num_rows() != 0){
-                return true;
+            if($result->num_rows() > 0){
+                return $result->result();
             }else{
                 return false;
             }
@@ -50,12 +50,12 @@ class Modelo extends CI_Model {
             $enviar = array(
                 'documentType' => $datos['tip_ident'],
                 'document' => $datos['document'],
-                'nombre' => $datos['nombre'],
-                'apellido' => $datos['apellido'],
+                'firstName' => $datos['nombre'],
+                'lastName' => $datos['apellido'],
                 'company' => $datos['company'],
-                'correo' => $datos['correo'],
-                'direccion' => $datos['direccion'],
-                'ciudad' => $datos['ciudad'],
+                'emailAddress' => $datos['correo'],
+                'address' => $datos['direccion'],
+                'city' => $datos['ciudad'],
                 'province' => $datos['provincia'],
                 'country' => $datos['pais'],
                 'pregunta' => $datos['pregunta'],
@@ -70,6 +70,17 @@ class Modelo extends CI_Model {
                 return false;
             }
         }
+  }
+
+  function person($correo){
+      $this->db->select('document, documentType, firstName, lastName, company, emailAddress, address, city, province, country');
+      $this->db->where('emailAddress',$correo);
+      $result = $this->db->get('persona');
+      if($result->num_rows() > 0){
+          return $result->result();
+      }else{
+          return false;
+      }
   }
 
 }

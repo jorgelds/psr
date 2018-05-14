@@ -32,6 +32,14 @@
                                 <input name="correo" type="email" value="" class="form-control" id="correo" required="required">
                             </div>
                         </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="pull-left">
+                                <a href="<?php echo base_url();?>/index.php/Controler" id="btn" class="btn btn-primary">Regresar</a>
+                            </div>
+                            <div class="pull-right">
+                                <button type="submit" id="btn" class="btn btn-primary">Seguir con el pago <i class="fa fa-caret-right" aria-hidden="true"></i> </button>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>

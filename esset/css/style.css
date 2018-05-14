@@ -28,3 +28,12 @@ input[type="file"]#archivo_modal {
 button.btn.btn-pse {
     background: transparent;
 }
+
+div#simuladora{
+    background: #e8e438a6;
+    display: inline-block;
+}
+
+div#titulo{
+    text-align: center;
+}

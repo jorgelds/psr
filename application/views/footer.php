@@ -25,18 +25,6 @@
 <script src="<?php echo base_url();?>esset/js/bootstrap-datetimepicker.min.js"></script>
 
 <script type="text/javascript">
-    $('#divMiCalendario').datetimepicker({
-        format: 'YYYY-MM-DD'
-    });
-    $('#divMiCalendario').data("DateTimePicker");
-    $('#divMiCalendario2').datetimepicker({
-        format: 'YYYY-MM-DD'
-    });
-    $('#divMiCalendario2').data("DateTimePicker");
-    $( document ).ready(function() {
-
-    });
-
     (function(a){a.fn.validCampo=function(b){
             a(this).on({
                 keypress:function(a){
@@ -66,97 +54,6 @@
         $("#email").show();
     });
 
-    function contr(x) {
-        pas1 = $('#pas').val();
-        if (pas1 == x) {
-            $("#con").attr("class", "form-group has-success has-feedback");
-            $("#ic").attr("class", "glyphicon glyphicon-ok form-control-feedback");
-            $("#ic").show();
-            $("#con2").attr("class", "form-group has-success has-feedback");
-            $("#ic2").attr("class", "glyphicon glyphicon-ok form-control-feedback");
-            $("#btn").attr("class", "btn btn-primary");
-            $("#ic2").show();
-        }
-        else {
-            $("#con").attr("class", "form-group has-error has-feedback");
-            $("#ic").attr("class", "glyphicon glyphicon-remove form-control-feedback");
-            $("#ic").show();
-            $("#con2").attr("class", "form-group has-error has-feedback");
-            $("#ic2").attr("class", "glyphicon glyphicon-remove form-control-feedback");
-            $("#btn").attr("class", "btn btn-primary disabled");
-            $("#ic2").show();
-        }
-    }
-
-    function usr(x,y) {
-        if (y == 1) {
-            $.ajax({
-                type:'post',
-                url: '<?php echo base_url(); ?>index.php/Controler/ver',
-                data: {usua : x, categoria : y},
-                success: function( respuesta ){
-                    //console.log(respuesta);
-                    if (respuesta != 1) {
-                        $("#us").attr("class", "form-group has-success has-feedback");
-                        $("#ic3").attr("class", "glyphicon glyphicon-ok form-control-feedback");
-                        $("#btn").attr("class", "btn btn-primary");
-                        $("#ic3").show();
-                    }
-                    else {
-                        $("#us").attr("class", "form-group has-error has-feedback");
-                        $("#ic3").attr("class", "glyphicon glyphicon-remove form-control-feedback");
-                        $("#btn").attr("class", "btn btn-primary disabled");
-                        $("#ic3").show();
-                    }
-                }
-            });
-        }
-        if (y == 2) {
-            $.ajax({
-                type:'post',
-                url: '<?php echo base_url(); ?>index.php/Controler/ver',
-                data: {usua : x, categoria : y},
-                success: function( respuesta ){
-                    //console.log(respuesta);
-                    if (respuesta != 1) {
-                        $("#co").attr("class", "form-group has-success has-feedback");
-                        $("#ic4").attr("class", "glyphicon glyphicon-ok form-control-feedback");
-                        $("#btn").attr("class", "btn btn-primary");
-                        $("#ic4").show();
-                    }
-                    else {
-                        $("#co").attr("class", "form-group has-error has-feedback");
-                        $("#ic4").attr("class", "glyphicon glyphicon-remove form-control-feedback");
-                        $("#btn").attr("class", "btn btn-primary disabled");
-                        $("#ic4").show();
-                    }
-                }
-            });
-        }
-        if (y == 3) {
-            $.ajax({
-                type:'post',
-                url: '<?php echo base_url(); ?>index.php/Controler/ver',
-                data: {usua : x, categoria : y},
-                success: function( respuesta ){
-                    //console.log(respuesta);
-                    if (respuesta != 1) {
-                        $("#ce").attr("class", "form-group has-success has-feedback");
-                        $("#ic5").attr("class", "glyphicon glyphicon-ok form-control-feedback");
-                        $("#btn").attr("class", "btn btn-primary");
-                        $("#ic5").show();
-                    }
-                    else {
-                        $("#ce").attr("class", "form-group has-error has-feedback");
-                        $("#ic5").attr("class", "glyphicon glyphicon-remove form-control-feedback");
-                        $("#btn").attr("class", "btn btn-primary disabled");
-                        $("#ic5").show();
-                    }
-                }
-            });
-        }
-    }
-
     function soloLetras(e) {
         key = e.keyCode || e.which;
         tecla = String.fromCharCode(key).toString();
@@ -173,22 +70,6 @@
 
         if(letras.indexOf(tecla) == -1 && !tecla_especial)
             return false;
-    }
-
-    function validar(obj) {
-        patron = /^\d{4}\-\d{2}\-\d{2}$/
-        if (patron.test(obj.value) == true) {
-            $("#ce6").attr("class", "form-group has-success has-feedback");
-            $("#ic6").attr("class", "glyphicon glyphicon-ok form-control-feedback");
-            $("#btn").attr("class", "btn btn-primary");
-            $("#ic6").show();
-        }
-        else {
-            $("#ce6").attr("class", "form-group has-error has-feedback");
-            $("#ic6").attr("class", "glyphicon glyphicon-remove form-control-feedback");
-            $("#btn").attr("class", "btn btn-primary disabled");
-            $("#ic6").show();
-        }
     }
 
     $("#secon_correo").blur(function () {
@@ -212,6 +93,41 @@
                 alert("Disculpe pero los dos correos deben ser iguales");
             }
         }
+    });
+
+    $("#call").click(function () {
+        trazco = $('#trazco').val();
+        fininstcode = $('#fininstcode').val();
+        entcode = $('#entcode').val();
+        amount = $('#amount').val();
+        tax = $('#tax').val();
+        tki = $('#tki').val();
+        tsta = $('select#tsta').val();
+        auto = $('#auto').val();
+        email = $('#email').val();
+        $.ajax({
+            type:'post',
+            url: '<?php echo base_url(); ?>index.php/Controler/createTransaction',
+            data: {
+                trazco : trazco,
+                fininstcode : fininstcode,
+                entcode : entcode,
+                amount : amount,
+                tax : tax,
+                tki : tki,
+                tsta : tsta,
+                auto : auto,
+                email : email
+            },
+            success: function( respuesta ){
+                data = JSON.parse(respuesta);
+                $("#mensaje").html("");
+                $("#trazco").val("");
+                mensaje = 'Call Return: '+data['returnCode']+' - Transaction State: '+data['transactionState'];
+                $("#mensaje").append(mensaje);
+                $("#trazco").val(data['trazabilityCode']);
+            }
+        });
     });
 </script>
 </body>

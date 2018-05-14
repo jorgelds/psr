@@ -97,10 +97,17 @@ class Controler extends CI_Controller
                 'correo' => $this->input->post('correo'),
                 'bankCode' => $this->input->post('bankCode'),
                 'tipo_operacion' => $this->input->post('trs'),
+                'documentType' => "",
+                'document' => "",
+                'ip' => $this->getRealIP(),
+                'vista' => 0,
                 'tipo_cuenta' => $this->input->post('tipo_cuenta')
             );
             $resultados = $this->Modelo->usuarios($datos);
-            if($resultados == true){
+            foreach ($resultados[0] as $key => $value){
+                $datos[$key] .= $value;
+            }
+            if(count($resultados) != 0){
                 $this->load->view('head', $datos);
                 $this->load->view('simuladora');
                 $this->load->view('footer');
@@ -132,63 +139,54 @@ class Controler extends CI_Controller
         }
     }
 
+    function debug(){
+        $datos = array(
+            'correo' => $this->input->post('correo'),
+            'bankCode' => $this->input->post('bankCode'),
+            'ip' => $this->getRealIP(),
+            'vista' => 1,
+            'tipo_cuenta' => $this->input->post('tipo_cuenta')
+        );
+        $this->load->view('head', $datos);
+        $this->load->view('simuladora');
+        $this->load->view('footer');
+    }
+
     function createTransaction() {
         $accion = 'createTransaction';
+        $valores = array(
+            'trazco' => $this->input->post('trazco'),
+            'fininstcode' => $this->input->post('fininstcode'),
+            'entcode' => $this->input->post('entcode'),
+            'amount' => $this->input->post('amount'),
+            'tax' => $this->input->post('tax'),
+            'tki' => $this->input->post('tki'),
+            'tsta' => $this->input->post('tsta'),
+            'auto' => $this->input->post('auto'),
+            'email' => $this->input->post('email')
+        );
+        $person = $this->Modelo->person($valores['email']);
+        $payer = array('document' => '', 'documentType' => '', 'firstName' => '', 'lastName' => '', 'company' => '', 'emailAddress' => '', 'address' => '', 'city' => '', 'province' => '', 'country' => '');
+        foreach($person[0] as $key=>$value){
+            $payer[$key] .= $value;
+        }
         $param = array(
-                    'bankCode' => '1552',
-                    'bankInterface' => '0',
-                    'currency' => 'COP',
-                    'language' => 'ES',
-                    'description' => 'prueba',
-                    'reference' => 'referencia',
-                    'returnURL' => 'http://localhost/psr/index.php/',
-                    'totalAmount' => '1',
-                    'ipAddress' => $_SERVER['SERVER_ADDR'],
-                    'userAgent' => $_SERVER['HTTP_USER_AGENT'],
-                    'payer' => array(
-                        'document' => '129996516',
-                        'documentType' => 'PPN',
-                        'firstName' => 'jorge',
-                        'lastName' => 'diaz',
-                        'company' => 'jorgelds',
-                        'emailAddress' => 'jorgeluisds@hotmail.com',
-                        'address' => 'cl 48b #88-24',
-                        'city' => 'Medellín',
-                        'province' => 'Antoquia',
-                        'country' => 'CO',
-                        'phone' => '3207362145',
-                        'mobile' => '3207362145'
-                    ),
-                    'buyer' => array(
-                        'document' => '129996516',
-                        'documentType' => 'PPN',
-                        'firstName' => 'jorge',
-                        'lastName' => 'diaz',
-                        'company' => 'jorgelds',
-                        'emailAddress' => 'jorgeluisds@hotmail.com',
-                        'address' => 'cl 48b #88-24',
-                        'city' => 'Medellín',
-                        'province' => 'Antoquia',
-                        'country' => 'CO',
-                        'phone' => '3207362145',
-                        'mobile' => '3207362145'
-                    ),
-                    'shipping' => array(
-                        'document' => '129996516',
-                        'documentType' => 'PPN',
-                        'firstName' => 'jorge',
-                        'lastName' => 'diaz',
-                        'company' => 'jorgelds',
-                        'emailAddress' => 'jorgeluisds@hotmail.com',
-                        'address' => 'cl 48b #88-24',
-                        'city' => 'Medellín',
-                        'province' => 'Antoquia',
-                        'country' => 'CO',
-                        'phone' => '3207362145',
-                        'mobile' => '3207362145'
-                    )
+            'bankCode' => $valores['fininstcode'],
+            'bankInterface' => '0',
+            'currency' => 'COP',
+            'language' => 'ES',
+            'description' => 'prueba',
+            'reference' => 'referencia',
+            'returnURL' => base_url().'index.php/Controler/debug',
+            'totalAmount' => $valores['amount'],
+            'taxAmount' => $valores['tax'],
+            'ipAddress' => $this->getRealIP(),
+            'userAgent' => $_SERVER['HTTP_USER_AGENT'],
+            'payer' => $payer,
+            'buyer' => $payer,
+            'shipping' => $payer
 
-                );
+        );
         $respuesta = $this->conexion($accion, 'transaction', $param);
         $this->PSETransactionRequest($respuesta);
     }
@@ -213,9 +211,7 @@ class Controler extends CI_Controller
                 $datos[$key] = $value;
         }
         $respuesta = $this->conexion($accion, 'transactionID', $datos['transactionID']);
-        echo '<pre>';
-        print_r($respuesta);
-        echo '</pre>';
+        print_r(json_encode($respuesta['getTransactionInformationResult']));
     }
 
     function conexion($acion, $variable, $parametros){
@@ -265,6 +261,35 @@ class Controler extends CI_Controller
                     }
                 }
             }
+        }
+    }
+
+    function getRealIP(){
+
+        if (isset($_SERVER["HTTP_CLIENT_IP"])){
+
+            return $_SERVER["HTTP_CLIENT_IP"];
+
+        }elseif (isset($_SERVER["HTTP_X_FORWARDED_FOR"])){
+
+            return $_SERVER["HTTP_X_FORWARDED_FOR"];
+
+        }elseif (isset($_SERVER["HTTP_X_FORWARDED"])){
+
+            return $_SERVER["HTTP_X_FORWARDED"];
+
+        }elseif (isset($_SERVER["HTTP_FORWARDED_FOR"])){
+
+            return $_SERVER["HTTP_FORWARDED_FOR"];
+
+        }elseif (isset($_SERVER["HTTP_FORWARDED"])){
+
+            return $_SERVER["HTTP_FORWARDED"];
+
+        }else{
+
+            return $_SERVER["REMOTE_ADDR"];
+
         }
     }
 }
