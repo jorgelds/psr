@@ -44,6 +44,14 @@
 
     });
 
+    $("form").submit(function(e){
+        if(parseInt($("#banco").val()) == 0){
+            e.preventDefault();
+            alert("Disculpe seleccione un banco");
+        }
+
+    });
+
     $(".btn-pse").click(function () {
         $('#formulario').show();
         $("#email").hide();
