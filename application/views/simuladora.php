@@ -183,7 +183,6 @@
                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <select name="" id="tsta">
                                 <option value="OK">OK</option>
-                                <option value="Null">Null</option>
                             </select>
                         </div>
                     </div>

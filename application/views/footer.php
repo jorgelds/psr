@@ -131,7 +131,12 @@
                 data = JSON.parse(respuesta);
                 $("#mensaje").html("");
                 $("#trazco").val("");
-                mensaje = 'Call Return: '+data['returnCode']+' - Transaction State: '+data['transactionState'];
+                if(parseInt($("#auto").val()) == 00001){
+                    mensaje = 'Call Return: Rechazado - Transaction State: '+data['transactionState'];
+                }
+                else{
+                    mensaje = 'Call Return: '+data['returnCode']+' - Transaction State: '+data['transactionState'];
+                }
                 $("#mensaje").append(mensaje);
                 $("#trazco").val(data['trazabilityCode']);
             }
