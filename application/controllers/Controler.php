@@ -9,7 +9,9 @@ class Controler extends CI_Controller
         $this->load->library('session');
         $this->load->library('nuSoap_lib');
     }
-
+    /***
+     * Función para la vista principal
+     */
     public function index() {
         //$bancos = $this->Modelo->consultar_bancos();
         $this->bancos();
@@ -46,60 +48,11 @@ class Controler extends CI_Controller
         if($json_clientes[0] == date('Y-m-d')){
         }
         else{
-            $proxyhost = isset($_POST['proxyhost']) ? $_POST['proxyhost'] : '';
-            $proxyport = isset($_POST['proxyport']) ? $_POST['proxyport'] : '';
-            $proxyusername = isset($_POST['proxyusername']) ? $_POST['proxyusername'] : '';
-            $proxypassword = isset($_POST['proxypassword']) ? $_POST['proxypassword'] : '';
-            $seed = date('c');
-
-            $tranKey = '024h1IlD';
-
-            $key = $hashString = sha1($seed
-                . $tranKey, false);
-
-            $id = '6dd490faf9cb87a9862245da41170ff2';
-
-            $wsdl = 'https://test.placetopay.com/soap/pse/';
-
-            $this->nusoap_client = new nusoap_client($wsdl, true, $proxyhost, $proxyport, $proxyusername, $proxypassword);
-            $this->nusoap_client->setCredentials($id, $key, '');
-            $this->nusoap_client->forceEndpoint = 'https://test.placetopay.com/soap/pse';
-
-            if ($this->nusoap_client->fault) {
-                $text = 'Error: ' . $this->nusoap_client->fault;
-            } else {
-                if ($this->nusoap_client->getError()) {
-                    $text = 'Error: ' . $this->nusoap_client->getError();
-                } else {
-                    $param = array(
-                        'auth' => array(
-                            'login' => $id,
-                            'tranKey' => $key,
-                            'seed' => $seed
-                        ));
-                    $result = $this->nusoap_client->call('getBankList', $param, 'PlacetoPay_PSEService', '', false, true);
-                    $result[] .= date('Y-m-d');
-                    $json_string = json_encode($result);
-                    $file = 'bancos.json';
-                    file_put_contents($file, $json_string);
-                    // Check for a fault
-                    if ($this->nusoap_client->fault) {
-                        echo '<h2>Fault</h2><pre>';
-                        print_r($result);
-                        echo '</pre>';
-                    } else {
-                        // Check for errors
-                        $err = $this->nusoap_client->getError();
-                        if ($err) {
-                            // Display the error
-                            echo '<h2>Error</h2><pre>' . $err . '</pre>';
-                        } else {
-                            // Display the result
-                            $this->Modelo->agregar_bancos($result);
-                        }
-                    }
-                }
-            }
+            $result = $this->conexion('getBankList', '0', '');
+            $result[] .= date('Y-m-d');
+            $json_string = json_encode($result);
+            $file = 'bancos.json';
+            file_put_contents($file, $json_string);
         }
     }
 
@@ -225,7 +178,9 @@ class Controler extends CI_Controller
         $respuesta = $this->conexion($accion, 'transactionID', $datos['transactionID']);
         print_r(json_encode($respuesta['getTransactionInformationResult']));
     }
-
+    /***
+     * Función para la conexion con el webservices
+     */
     function conexion($acion, $variable, $parametros){
         $proxyhost = isset($_POST['proxyhost']) ? $_POST['proxyhost'] : '';
         $proxyport = isset($_POST['proxyport']) ? $_POST['proxyport'] : '';
@@ -245,14 +200,24 @@ class Controler extends CI_Controller
             if ($this->nusoap_client->getError()) {
                 $text = 'Error: ' . $this->nusoap_client->getError();
             } else {
-                $param = array(
-                    'auth' => array(
-                        'login' => $id,
-                        'tranKey' => $key,
-                        'seed' => $seed
-                    ),
-                    $variable => $parametros
-                );
+                if($variable == 0){
+                    $param = array(
+                        'auth' => array(
+                            'login' => $id,
+                            'tranKey' => $key,
+                            'seed' => $seed
+                        )
+                    );
+                }else{
+                    $param = array(
+                        'auth' => array(
+                            'login' => $id,
+                            'tranKey' => $key,
+                            'seed' => $seed
+                        ),
+                        $variable => $parametros
+                    );
+                }
                 $result = $this->nusoap_client->call($acion, $param, 'PlacetoPay_PSEService', '', false, true);
                 if ($this->nusoap_client->fault) {
                     echo '<h2>Fault</h2><pre>';
@@ -275,7 +240,9 @@ class Controler extends CI_Controller
             }
         }
     }
-
+    /***
+     * Función para determinar la ip del visitante
+    */
     function getRealIP(){
 
         if (isset($_SERVER["HTTP_CLIENT_IP"])){
