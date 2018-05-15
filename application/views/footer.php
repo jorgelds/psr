@@ -132,7 +132,7 @@
                 $("#mensaje").html("");
                 $("#trazco").val("");
                 if(parseInt($("#auto").val()) == 00001){
-                    mensaje = 'Call Return: Rechazado - Transaction State: '+data['transactionState'];
+                    mensaje = 'Call Return: Rechazado - Transaction State: Fallido';
                 }
                 else{
                     mensaje = 'Call Return: '+data['returnCode']+' - Transaction State: '+data['transactionState'];
